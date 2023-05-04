@@ -1,27 +1,32 @@
 package com.learntocode;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Transaction {
-    private LocalDateTime dateTime;
+    private LocalDate date;
+    private LocalTime time;
     private String description;
     private String vendor;
     private double amount;
 
-    public Transaction(LocalDateTime dateTime, String description, String vendor, double amount) {
-        this.dateTime = dateTime;
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
+
+        this.time = time;
+        this.date = date;
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalTime getTime() {
+        return time;
     }
 
-    public String getDescription() {
-        return description;
+    public LocalDate getDate() {
+        return date;
     }
 
     public String getVendor() {
@@ -33,8 +38,23 @@ public class Transaction {
     }
 
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = dateTime.format(formatter);
-        return formattedDate + "|" + description + "|" + vendor + "|" + String.format("%.2f", amount);
+        return "transaction" + date + "|" + time +"|" + description + "|" + vendor + "|" + String.format("%.2f", amount);
+    }
+
+    public static void main(String[] args) {
+        List<Transaction> transactions = new ArrayList<Transaction>();
+
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        String description = "Test transaction";
+        String vendor = "Test vendor";
+        double amount = 100.00;
+
+        transactions.add(new Transaction(date, time, description, vendor, amount));
+
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
+        }
     }
 }
+
