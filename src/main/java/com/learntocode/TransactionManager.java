@@ -3,23 +3,28 @@ package com.learntocode;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
-    private static final String FILENAME = "transactions.csv";
+    private static final String FILENAME = "transaction.csv";
     public TransactionManager() {
         transactions = new ArrayList<>();
         loadTransactions();
     }
 
-    public void addDeposit(LocalDateTime dateTime, String description, String vendor, double amount) {
-        transactions.add(new Transaction(TransactionType, DEPOSIT, dateTime, description, vendor, amount));
+    public void addDeposit(String date, String time, String description, String vendor, double amount) {
+        LocalTime time1 = LocalTime.parse(time);
+        LocalDate date1 = LocalDate.parse(date);
+        transactions.add(new Transaction(date1, time1, description, vendor, amount));
     }
 
+
     public void makePayment(String date, String time, String description, String vendor, double amount) {
-        LocalDateTime dateTime = LocalDateTime.parse(date + " " + time);
-        Transaction transaction = new Transaction(dateTime, description, vendor, -amount);
+        LocalDate date2 = LocalDate.parse(date);
+        LocalTime time2 = LocalTime.parse(time);
+        Transaction transaction = new Transaction(date2, time2, description, vendor, -amount);
         transactions.add(transaction);
         saveTransactions();
     }
@@ -85,7 +90,7 @@ public class TransactionManager {
     private Transaction[] getReport(LocalDate startDate, LocalDate endDate) {
         ArrayList<Transaction> matchingTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {
-            LocalDate transactionDate = transaction.getDateTime().toLocalDate();
+            LocalDate transactionDate = transaction.getDate();
             if (!transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate)) {
                 matchingTransactions.add(transaction);
             }
@@ -101,11 +106,12 @@ public class TransactionManager {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split("\\|");
-                    LocalDateTime dateTime = LocalDateTime.parse(parts[0] + " " + parts[1]);
+                    LocalDate date = LocalDate.parse(parts[0]);
+                    LocalTime time = LocalTime.parse(parts[1]);
                     String description = parts[2];
                     String vendor = parts[3];
                     double amount = Double.parseDouble(parts[4]);
-                    Transaction transaction = new Transaction(dateTime, description, vendor, amount);
+                    Transaction transaction = new Transaction(date, time, description, vendor, amount);
                     transactions.add(transaction);
                 }
             } catch (IOException e) {
