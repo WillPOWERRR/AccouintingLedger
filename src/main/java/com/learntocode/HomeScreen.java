@@ -1,5 +1,7 @@
 package com.learntocode;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.Scanner;
 
 public class HomeScreen {
@@ -42,6 +44,12 @@ public class HomeScreen {
     }
 
     private void addDeposit() {
+        try {
+            String Filepath = "transaction.csv";
+            FileWriter file = new FileWriter(Filepath, true);
+            BufferedWriter buffer = new BufferedWriter(file);
+
+
         System.out.println("==== Add Deposit ====");
         System.out.print("Date (yyyy-mm-dd): ");
         String date = scanner.nextLine();
@@ -56,7 +64,14 @@ public class HomeScreen {
         scanner.nextLine(); // consume the newline character
 
         transactionManager.addDeposit(date, time, description, vendor, amount);
+        buffer.write(date + "|" + time +"|" + description + "|" + vendor + "|" + amount + "\n");
         System.out.println("Deposit added successfully!");
+        buffer.newLine();
+        buffer.close();
+          }catch (java.io.IOException e){
+        System.out.println();
+        }
+
     }
 
     private void makePayment() {
